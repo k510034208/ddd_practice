@@ -1,9 +1,21 @@
+export class UserCreateApiResponse {
+  status: 'success' | 'error'
+  result: UserCreateResponse | {}
+
+  constructor(
+    status: 'success' | 'error',
+    result: UserCreateResponse | {} ) {
+    this.status = status
+    this.result = result
+  }
+}
+
 export class UserCreateResponse {
   firstName: string
   lastName: string
   email: string
   age: number
-  constructor (
+  constructor(
     firstName: string,
     lastName: string,
     email: string,
@@ -21,7 +33,7 @@ export class UserCreateRequest {
   lastName: string
   email: string
   age: number
-  constructor (
+  constructor(
     firstName: string,
     lastName: string,
     email: string,
