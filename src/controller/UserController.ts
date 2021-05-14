@@ -1,26 +1,30 @@
 import {getRepository} from "typeorm";
 import {NextFunction, Request, Response} from "express";
 import {User} from "../entity/User";
+import {Body, JsonController, Post} from "routing-controllers";
+import {RegisterUsecase} from "../usecase/usercase";
+import {UserCreateRequest, UserCreateResponse} from "../viewmodels/viewmodel";
 
+@JsonController('/api/user')
 export class UserController {
+    constructor (
+        private readonly registerUsecase: RegisterUsecase
+    ) { }
 
-    private userRepository = getRepository(User);
+    @Post('/')
+    async registerUser (@Body({required: true}) userCreateRequest: UserCreateRequest): Promise<{
+        status: 'success' | 'error',
+        result: UserCreateResponse
+    }> {
+        const user = await this.registerUsecase.saveUser(
+            userCreateRequest.firstName,
+            userCreateRequest.lastName,
+            userCreateRequest.email,
+            userCreateRequest.age
+        )
 
-    async all(request: Request, response: Response, next: NextFunction) {
-        return this.userRepository.find();
+        return {
+
+        }
     }
-
-    async one(request: Request, response: Response, next: NextFunction) {
-        return this.userRepository.findOne(request.params.id);
-    }
-
-    async save(request: Request, response: Response, next: NextFunction) {
-        return this.userRepository.save(request.body);
-    }
-
-    async remove(request: Request, response: Response, next: NextFunction) {
-        let userToRemove = await this.userRepository.findOne(request.params.id);
-        await this.userRepository.remove(userToRemove);
-    }
-
 }
