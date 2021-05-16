@@ -2,6 +2,7 @@
 import { Body, JsonController, Post } from "routing-controllers";
 import { RegisterUsecase } from "../usecase/usercase";
 import { UserCreateRequest, UserCreateApiResponse } from "../viewmodels/viewmodel";
+import { IUserRepository } from '../repositories/userRepository'
 
 @JsonController( '/api/user' )
 export class UserController {
