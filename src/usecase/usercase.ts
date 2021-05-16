@@ -1,6 +1,7 @@
-import UserRepository from '../repositories/userRepository'
 import { User } from '../entity/User'
 import { UserCreateResponse } from '../viewmodels/viewmodel'
+import IUserRepository from '../repositories/userRepository'
+import UserRepository from '../repositories/userRepository'
 
 export interface IRegisterUsecase {
   saveUser(
@@ -13,9 +14,11 @@ export interface IRegisterUsecase {
 
 export class RegisterUsecase implements IRegisterUsecase {
 
-  constructor(
-    private readonly userRepository: UserRepository
-  ) { }
+  userRepository: IUserRepository
+
+  constructor() {
+    this.userRepository = new UserRepository()
+  }
 
   async saveUser( firstName: string, lastName: string, email: string, age: number ) {
 

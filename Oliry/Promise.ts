@@ -1,3 +1,4 @@
+/*
 import { readFile } from 'fs'
 import { resolve } from 'url'
 
@@ -33,3 +34,4 @@ function readFilePromise( path: string ): Promise<string> {
     } )
   } )
 }
+*/

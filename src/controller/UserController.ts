@@ -1,14 +1,17 @@
 
 import { Body, JsonController, Post } from "routing-controllers";
-import { RegisterUsecase } from "../usecase/usercase";
+import { IRegisterUsecase, RegisterUsecase } from "../usecase/usercase";
 import { UserCreateRequest, UserCreateApiResponse } from "../viewmodels/viewmodel";
-import { IUserRepository } from '../repositories/userRepository'
+import UserRepository from '../repositories/userRepository'
 
 @JsonController( '/api/user' )
 export class UserController {
-    constructor(
-        private readonly registerUsecase: RegisterUsecase
-    ) { }
+
+    private readonly registerUsecase: IRegisterUsecase
+
+    constructor() {
+        this.registerUsecase = new RegisterUsecase()
+    }
 
     @Post( '/' )
     async registerUser( @Body( { required: true } ) userCreateRequest: UserCreateRequest ): Promise<UserCreateApiResponse> {
