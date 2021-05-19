@@ -123,8 +123,8 @@ class UserApplicationService {
   /*
    * ユーザ登録 
   */
-  registerUser( name: string, mailAddress: string ): void {
-    let user = new UserChap6( new UserNameChap6( name ), new MaillAddress( mailAddress ) )
+  registerUser( command: UserRegisterCommand ): void {
+    let user = new UserChap6( new UserNameChap6( command.Name ), new MaillAddress( command.MailAddress ) )
     if ( this.userService.isExists( user ) ) { throw Error( 'ユーザは既に登録済み' ) }
 
     this.userRepository.save( user )
@@ -223,3 +223,111 @@ class UserUpdateCommand {
     if ( mailaddress ) { this.MailAddress = mailaddress }
   }
 }
+
+class UserRegisterCommand {
+  readonly Name: string
+  readonly MailAddress: string
+
+  constructor( name: string, mailaddress: string ) {
+    this.Name = name
+    this.MailAddress = mailaddress
+  }
+}
+
+
+// 凝集度の観点からクラスを分割する
+class UserRegisterService {
+
+  constructor(
+    private readonly userRepository: IUserRepositoryChap6,
+    private readonly userService: UserServiceChap6
+  ) { }
+
+  /*
+   * ユーザ登録 
+  */
+  registerUser( command: UserRegisterCommand ): void {
+    let user = new UserChap6( new UserNameChap6( command.Name ), new MaillAddress( command.MailAddress ) )
+    if ( this.userService.isExists( user ) ) { throw Error( 'ユーザは既に登録済み' ) }
+
+    this.userRepository.save( user )
+  }
+}
+
+class UserGetInfoService {
+
+  constructor(
+    private readonly userRepository: IUserRepositoryChap6,
+    private readonly userService: UserServiceChap6
+  ) { }
+
+  /*
+   * ユーザ情報取得
+   */
+  async get( userId: number ): Promise<UserDataChap6> {
+    let targetId = new UserIdChap6( userId )
+    let user = await this.userRepository.findById( targetId )
+
+    if ( !user ) {
+      return null
+    }
+
+    return new UserDataChap6( user )
+  }
+}
+
+class UserUpdateService {
+
+  constructor(
+    private readonly userRepository: IUserRepositoryChap6,
+    private readonly userService: UserServiceChap6
+  ) { }
+
+  /*
+   * ユーザ情報更新
+   */
+  async update( updateCommand: UserUpdateCommand ): Promise<void> {
+    let targetId = new UserIdChap6( updateCommand.Id )
+    let user = await this.userRepository.findById( targetId )
+
+    if ( !user ) { throw Error( 'ユーザ登録されていない' ) }
+
+    let newUserName = new UserNameChap6( updateCommand.Name )
+    user.changeName( newUserName )
+
+    if ( this.userService.isExists( user ) ) {
+      throw Error( 'ユーザは既に登録済み' )
+    }
+
+    let mailAddress = updateCommand.MailAddress
+    if ( !mailAddress ) {
+      let newMailAddress = new MaillAddress( mailAddress )
+      user.changeMailAddress( newMailAddress )
+    }
+
+    await this.userRepository.save( user )
+  }
+}
+
+// 依存の注入
+class UserDeleteService {
+
+  constructor(
+    private readonly userRepository: IUserRepositoryChap6,
+  ) { }
+
+  /*
+   * ユーザ情報削除
+  */
+  async deleteUser( command: UserUpdateCommand ): Promise<void> {
+    let targetId = new UserIdChap6( command.Id )
+    let user = await this.userRepository.findById( targetId )
+
+    if ( !user ) { throw Error( 'ユーザ登録されていない' ) } // ユーザが見つからないため、returnとして退会成功としてもよい
+
+    await this.userRepository.delete( user )
+  }
+}
+
+let userRepository6 = new UserRepositoryChap6()
+let userDeleteService = new UserDeleteService( userRepository6 )

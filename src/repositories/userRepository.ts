@@ -20,7 +20,8 @@ export default class UserRepository extends Repository<User> implements IUserRep
 
   // データが存在する場合は登録。すでに存在する場合はundefinedを返却
   async insert( user: User ) {
-    if ( await !super.findOne( user ) ) {
+
+    if ( !await super.findOne( user ) ) {
       return await super.insert( user )
     } else {
       throw Error( 'すでに登録されています' )

@@ -28,7 +28,9 @@
       "mysql": "^2.14.1",
       "reflect-metadata": "^0.1.10",
       "routing-controllers": "^0.9.0",
-      "typeorm": "0.2.32"
+      "typedi": "^0.10.0",
+      "typeorm": "0.2.32",
+      "typeorm-typedi-extensions": "^0.4.1"
    },
    "devDependencies": {
       "@types/body-parser": "^1.19.0",
