@@ -1,5 +1,5 @@
 // エンティティ
-class UserChap6 {
+export class UserChap6 {
 
   Id: UserIdChap6
   Name: UserNameChap6
@@ -31,7 +31,7 @@ class UserChap6 {
 
 // 値オブジェクト
 // コンストラクタでのみ値を設定できるようにする（getterを排除）
-class UserNameChap6 {
+export class UserNameChap6 {
   readonly value: string
 
   constructor( name: string ) {
@@ -43,7 +43,7 @@ class UserNameChap6 {
   }
 }
 
-class UserIdChap6 {
+export class UserIdChap6 {
   readonly value: number
 
   constructor( id: number ) {
@@ -52,7 +52,7 @@ class UserIdChap6 {
   }
 }
 
-class MaillAddress {
+export class MaillAddress {
   readonly value: string
 
   constructor( mailAddress: string ) {
@@ -61,7 +61,7 @@ class MaillAddress {
 }
 
 // ドメインサービス
-class UserServiceChap6 {
+export class UserServiceChap6 {
 
   constructor( private readonly userRepository: IUserRepositoryChap6 ) { }
 
@@ -74,7 +74,7 @@ class UserServiceChap6 {
 }
 
 // リポジトリのインターフェース
-interface IUserRepositoryChap6 {
+export interface IUserRepositoryChap6 {
   findById( id: UserIdChap6 ): Promise<UserChap6>
   findByName( name: UserNameChap6 ): Promise<UserChap6>
   findByMailAddress( mailAddress: MaillAddress ): Promise<UserChap6>
@@ -82,7 +82,7 @@ interface IUserRepositoryChap6 {
   delete( user: UserChap6 ): Promise<void>
 }
 
-class UserRepositoryChap6 implements IUserRepositoryChap6 {
+export class UserRepositoryChap6 implements IUserRepositoryChap6 {
 
   async findById( id: UserIdChap6 ): Promise<UserChap6> {
     return new UserChap6(
@@ -113,7 +113,7 @@ class UserRepositoryChap6 implements IUserRepositoryChap6 {
 }
 
 
-class UserApplicationService {
+export class UserApplicationService {
 
   constructor(
     private readonly userRepository: IUserRepositoryChap6,
@@ -210,7 +210,7 @@ class UserDataChap6 {
 }
 
 // コマンドオブジェクト => リクエストパラメータでも同じ考え方が出来そう
-class UserUpdateCommand {
+export class UserUpdateCommand {
 
   readonly Id: number
   readonly Name: string
@@ -224,7 +224,7 @@ class UserUpdateCommand {
   }
 }
 
-class UserRegisterCommand {
+export class UserRegisterCommand {
   readonly Name: string
   readonly MailAddress: string
 
